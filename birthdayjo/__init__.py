@@ -17,7 +17,7 @@ def create_app(test_config=None):
     app = Flask(__name__)
     app.secret_key = 'dev'
     app.config['UPLOAD_EXTENSIONS'] = ['.JPG','.jpg','.JPEG','.png','.gif']
-    app.config['UPLOAD_PATH'] = 'birthdayjo/img'
+    app.config['UPLOAD_PATH'] = 'birthdayjo/img/'
 
     @app.errorhandler(413)
     def too_large(e):
