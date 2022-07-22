@@ -73,4 +73,7 @@ def create_app(test_config=None):
     def upload(filename):
         return send_from_directory(app.config['UPLOAD_PATH'], filename)
 
+    from . import db
+    db.init_app(app)
+
     return app
