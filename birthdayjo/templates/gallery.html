@@ -63,7 +63,7 @@
     </nav>
 
     <main>
-    <h1> Happy Birthday Jo!</h1>
+      <img id="header" src="/static/svg/Jo_Birthday_Web_Header.svg" alt="Happy Birthday, JO!">
     <h2>Remember when...</h2>
 
 
@@ -71,73 +71,73 @@
       {% for file in files %}
         <div
             class="card card-tall"
-            style="background-image:url('{{ url_for('upload', filename=file) }}')">
+            style="background-image:url'{{ url_for('upload', filename=file) }}';">
             1
         </div>
 
         <div
             class="card card-tall card-wide"
-            style="background-image:url('{{ url_for('upload', filename=file) }}')">
+            style="background-image:url('')">
             2
         </div>
 
         <div
             class="card card-tall"
-            style="background-image:url('{{ url_for('upload', filename=file) }}')">
+            style="background-image:url('')">
             3
         </div>
 
         <div
             class="card card-wide"
-            style="background-image:url('{{ url_for('upload', filename=file) }}')">
+            style="background-image:url('')">
             4
         </div>
 
         <div
             class="card card-tall card-wide"
-            style="background-image:url('{{ url_for('upload', filename=file) }}')">
+            style="background-image:url('')">
             5
         </div>
 
         <div
             class="card card-tall"
-            style="background-image:url('{{ url_for('upload', filename=file) }}')">
+            style="background-image:url('')">
             6
         </div>
 
         <div
             class="card card-wide"
-            style="background-image:url('{{ url_for('upload', filename=file) }}')">
+            style="background-image:url('')">
             7
         </div>
 
         <div
             class="card card-tall"
-            style="background-image:url('{{ url_for('upload', filename=file) }}')">
+            style="background-image:url('')">
             8
         </div>
 
         <div
             class="card card-tall"
-            style="background-image:url('{{ url_for('upload', filename=file) }}')">
+            style="background-image:url('')">
             9
         </div>
 
         <div
             class="card card-tall"
-            style="background-image:url('{{ url_for('upload', filename=file) }}')">
+            style="background-image:url('')">
             10
         </div>
 
         <div
             class="card card-tall"
-            style="background-image:url('{{ url_for('upload', filename=file) }}')">
+            style="background-image:url('')">
             11
         </div>
 
         <div
             class="card card-tall"
-            style="background-image:url('{{ url_for('upload', filename=file) }}')">
+            style="background-image:url('')">
             12
         </div>
       {% endfor %} 

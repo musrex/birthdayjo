@@ -8,6 +8,10 @@
     --transition-speed: 400ms;
 }
 
+#header {
+    width: 50rem;
+}
+
 h1 {
     font-family: 'Oleo Script', sans-serif;
 }

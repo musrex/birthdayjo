@@ -14,10 +14,27 @@ class MyForm(FlaskForm):
     submit = SubmitField('submit')
 
 def create_app(test_config=None):
+    #create and configure a[[]]
     app = Flask(__name__)
-    app.secret_key = 'dev'
-    app.config['UPLOAD_EXTENSIONS'] = ['.JPG','.jpg','.JPEG','.png','.gif']
-    app.config['UPLOAD_PATH'] = 'birthdayjo/img'
+    app.config.from_mapping(
+        SECRET_KEY='dev',
+        DATABASE=os.path.join(app.instance_path, 'birthdayjo.sqlite'),
+        UPLOAD_PATH = 'birthdayjo/static/img',
+        UPLOAD_EXTENSIONS = ['.JPG','.jpg','.JPEG','.png','.gif']
+    )
+
+    if test_config is None:
+        #load the instance config, if exists and not testing
+        app.config.from_pyfile('config.py', silent=True)
+    else:
+        #load the test config is passed in
+        app.config.from_mapping(test_config)
+
+    #ensures the instance folder exists
+    try:
+        os.makedirs(app.instance_path)
+    except OSError:
+        pass
 
     @app.errorhandler(413)
     def too_large(e):
@@ -69,8 +86,14 @@ def create_app(test_config=None):
             return render_template('share.html')
 
 
-    @app.route('/img/<filename>')
+    @app.route('/static/img/<filename>')
     def upload(filename):
         return send_from_directory(app.config['UPLOAD_PATH'], filename)
+
+    from . import db
+    db.init_app(app)
+
+    from . import auth
+    app.register_blueprint(auth.bp)
 
     return app
