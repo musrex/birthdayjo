@@ -41,8 +41,6 @@ def create_app(test_config=None):
         flash('File is too large', 'ERROR')
         return render_template('share.html') 
 
-
-
     def validate_image(stream):
         header = stream.read(512)
         stream.seek(0)
@@ -53,7 +51,7 @@ def create_app(test_config=None):
 
     @app.route('/')
     def index():
-        return render_template('base.html')
+        return render_template('index.html')
 
     @app.route('/gallery/')
     def gallery():
@@ -69,21 +67,28 @@ def create_app(test_config=None):
         files = os.listdir(app.config['UPLOAD_PATH'])
         return render_template('share.html', files=files)
 
-    @app.route('/blog/share/', methods=['POST'])
-    def upload_file():
-        count = 0
-        for uploaded_file in request.files.getlist('file'):
+    @app.route('/blog/update/')
+    def update():
+        files = os.listdir(app.config['UPLOAD_PATH'])
+        return render_template('update.html', files=files)
 
+    @app.route('/create/')
+    def create():
+        files = os.listdir(app.config['UPLOAD_PATH'])
+        return render_template('create.html', files=files)
+
+    @app.route('/blog/create/', methods=['POST'])
+    def upload_file():
+        for uploaded_file in request.files.getlist('file'):
             filename = secure_filename(uploaded_file.filename)
             if filename != '':
                 file_ext = os.path.splitext(filename)[1]
-                if file_ext not in app.config['UPLOAD_EXTENSIONS'] or \
-                    file_ext != validate_image(uploaded_file.stream):
+                if file_ext not in app.config['UPLOAD_EXTENSIONS'] or file_ext != validate_image(uploaded_file.stream):
                     flash('Invalid image, check file extension.', 'ERROR')
-                    return render_template('share.html')
+                    return render_template('create.html')
                 uploaded_file.save(os.path.join(app.config['UPLOAD_PATH'], filename))
             flash('Image upload complete. ', 'Success')
-            return render_template('/blog/share.html')
+            return render_template('/blog/create.html')
 
 
     @app.route('/static/img/<filename>')

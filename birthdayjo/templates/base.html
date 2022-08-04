@@ -18,7 +18,7 @@
     <nav class="navbar">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a href="{{ url_for('gallery') }}" class="nav-link">
+          <a href="{{ url_for('blog.gallery') }}" class="nav-link">
             <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
                 <path 
                 fill="currentColor"
@@ -30,7 +30,7 @@
 
         {% if g.user %}
         <li class="nav-item">
-          <a href="{{ url_for('blog.share') }}" class="nav-link">
+          <a href="{{ url_for('blog.create') }}" class="nav-link">
               <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" viewBox="0 0 640 512"><!--! Font Awesome Pro 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
                 <path 
                 fill="currentColor"
