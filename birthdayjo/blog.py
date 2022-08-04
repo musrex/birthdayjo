@@ -34,7 +34,7 @@ def create():
         else:
             db = get_db()
             db.execute(
-                'INSERT INTO post (title, body, author_id)'
+                'INSERT INTO post (title, body, author_id, filename)'
                 ' VALUES (?, ?, ?)',
                 (title, body, g.user['id'])
             )

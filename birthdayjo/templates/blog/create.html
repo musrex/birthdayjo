@@ -8,19 +8,10 @@
     <form method="post" enctype="multipart/form-data">
         <label for="title">Title</label>
         <input name="title" id="title" value="{{ request.form['title'] }}" required>
-        <div class="share">
         <label for="body">Use the form below to share an image and a caption. Once uploaded, the images and captions will appear in the <a href="{{ url_for('blog.gallery') }}">"Remember When..." section.</a></label>
-        </div>
-        
-        <div class="share">
         <textarea name="body" id="body">{{ request.form['body'] }}</textarea>
-        </div>
-        <div class="share">
         <label for="upload" class="custom-upload">Upload image</label> 
         <input type="file" name="file" id="upload" accept="image/*" multiple></input> 
-        </div>
-        <div class="share">
         <input type="submit" value="Share">
-        </div>
     </form>
 {% endblock %} 
