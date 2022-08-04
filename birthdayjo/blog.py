@@ -42,6 +42,7 @@ def create():
             return redirect(url_for('blog.gallery'))
             
     return render_template('blog/create.html')
+    
 
 def get_post(id, check_author=True):
     post = get_db().execute(
