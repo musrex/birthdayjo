@@ -53,7 +53,7 @@ def create_app(test_config=None):
 
     @app.route('/')
     def index():
-        return render_template('index.html')
+        return render_template('base.html')
 
     @app.route('/gallery/')
     def gallery():
@@ -69,7 +69,7 @@ def create_app(test_config=None):
         files = os.listdir(app.config['UPLOAD_PATH'])
         return render_template('share.html', files=files)
 
-    @app.route('/share/', methods=['POST'])
+    @app.route('/blog/share/', methods=['POST'])
     def upload_file():
         count = 0
         for uploaded_file in request.files.getlist('file'):
@@ -83,7 +83,7 @@ def create_app(test_config=None):
                     return render_template('share.html')
                 uploaded_file.save(os.path.join(app.config['UPLOAD_PATH'], filename))
             flash('Image upload complete. ', 'Success')
-            return render_template('share.html')
+            return render_template('/blog/share.html')
 
 
     @app.route('/static/img/<filename>')
@@ -95,5 +95,8 @@ def create_app(test_config=None):
 
     from . import auth
     app.register_blueprint(auth.bp)
+
+    from . import blog
+    app.register_blueprint(blog.bp)
 
     return app
