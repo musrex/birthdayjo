@@ -1,4 +1,3 @@
-import imghdr
 import os
 
 from flask import (Flask, abort, flash, redirect, render_template, request,
@@ -49,33 +48,6 @@ def create_app(test_config=None):
     @app.route('/lodging/')
     def lodging():
         return render_template('lodging.html')
-
-    def allowed_file(filename):
-        return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
-
-    @app.route('/create/', methods=['GET','POST'])
-    def upload_file():
-        if request.method == 'POST':
-            # check if post request has the file part
-            if 'file' not in request.files:
-                flash('Error 1: No file selected.')
-                return redirect(url_for('blog.create'))
-            file = request.files['file']
-            # if the user does not select a file, the browser submits an
-            # empty file without a filename
-            if file.filename == '':
-                flash('Error 2: No file selected.')
-                return redirect('blog.create')
-            if file and allowed_file(file.filename):
-                filename = secure_filename(file.filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                return redirect(url_for('download_file', name=filename))
-        return redirect(url_for('blog.gallery'))
-
-
-    @app.route('/static/img/<filename>')
-    def upload(filename):
-        return send_from_directory(app.config['UPLOAD_PATH'], filename)
 
     from . import db
     db.init_app(app)
