@@ -7,11 +7,12 @@ from birthdayjo.auth import login_required
 from birthdayjo.db import get_db
 
 import os
-
+UPLOAD_FOLDER = 'static/img',
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 bp = Blueprint('blog', __name__, url_prefix='/gallery')
 
 def allowed_file(filename):
-        return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
+        return '.' in filename and filename.rsplit('.', 1)[1].lower() in ['ALLOWED_EXTENSIONS']
 
 # @bp.route('/create/', methods=['GET','POST'])
 # def upload_file():
@@ -68,16 +69,17 @@ def create():
         if error is not None:
             flash(error)
         else:
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(['UPLOAD_FOLDER'], filename))
+                file = str(filename)
             db = get_db()
             db.execute(
-                'INSERT INTO post (title, body, author_id, filename)'
+                'INSERT INTO post (title, body, author_id, file)'
                 ' VALUES (?, ?, ?, ?)',
                 (title, body, g.user['id'], file)
             )
             db.commit()
-            if file and allowed_file(file.filename):
-                filename = secure_filename(file.filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             return redirect(url_for('blog.gallery'))
 
     return render_template('blog/create.html')
