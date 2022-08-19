@@ -1,42 +1,46 @@
 from flask import (
-    Flask, Blueprint, flash, g, redirect, render_template, request, url_for, send_from_directory)
+    Flask, Blueprint, flash, g, redirect, render_template, request, url_for, send_from_directory, current_app)
 from werkzeug.exceptions import abort
 from werkzeug.utils import secure_filename
 from birthdayjo.auth import login_required
 from birthdayjo.db import get_db
 
 import os
+import imghdr
+bp = Blueprint('blog', __name__, url_prefix='/')
 
-UPLOAD_FOLDER = '/static/img',
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
-bp = Blueprint('blog', __name__, url_prefix='/gallery')
+def validate_image(stream):
+    header = stream.read(512) # 512 bytes should be enough for a header check
+    stream.seek(0) # reset stream pointer
+    format = imghdr.what(None, header)
+    if not format:
+        return None
+    return '.' + (format if format != 'jpeg' else 'jpg')
 
-def allowed_file(filename):
-        return '.' in filename and filename.rsplit('.', 1)[1].lower() in ['ALLOWED_EXTENSIONS']
+@bp.errorhandler(413)
+def too_large(e):
+    return "File is too large", 413
 
-# @bp.route('/create/', methods=['GET','POST'])
-# def upload_file():
-#     if request.method == 'POST':
-#         # check if post request has the file part
-#         if 'file' not in request.files:
-#             flash('Error 1: No file selected.')
-#             return redirect(url_for('blog.create'))
-#         file = request.files['upload']
-#         # if the user does not select a file, the browser submits an
-#         # empty file without a filename
-#         if file.filename == '':
-#             flash('Error 2: No file selected.')
-#             return redirect('blog.create')
-#         if file and allowed_file(file.filename):
-#             filename = secure_filename(file.filename)
-#             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-#             return redirect(url_for('download_file', name=filename))
-#     return redirect(url_for('blog.gallery'))
+@bp.route('/create/')
+def index():
+    files = os.listdir(current_app.config['UPLOAD_PATH'])
+    return render_template('/blog/create.html', files=files)
 
+@bp.route('/create/', methods=['POST'])
+def upload_files():
+    uploaded_file = request.files['file']
+    filename = secure_filename(uploaded_file.filename)
+    if filename != '':
+        file_ext = os.path.splitext(filename)[1]
+        if file_ext not in current_app.config['UPLOAD_EXTENSIONS'] or \
+                file_ext != validate_image(uploaded_file.stream):
+            return "Invalid image", 400
+        uploaded_file.save(os.path.join(current_app.config['UPLOAD_PATH'], filename))
+    return '', 204
 
 @bp.route('/static/img/<filename>')
 def upload(filename):
-    return send_from_directory(['UPLOAD_FOLDER'], filename)
+    return send_from_directory(current_app.config['UPLOAD_PATH'], filename)
 
 @bp.route('/blog')
 def gallery():

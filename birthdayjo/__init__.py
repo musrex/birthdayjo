@@ -19,9 +19,9 @@ def create_app(test_config=None):
     app.config.from_mapping(
         SECRET_KEY='dev',
         DATABASE=os.path.join(app.instance_path, 'birthdayjo.sqlite'),
-        UPLOAD_FOLDER = 'static/img',
-        ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
     )
+    app.config['UPLOAD_EXTENSIONS'] = ['.jpg', 'jpeg', '.png', '.gif']
+    app.config['UPLOAD_PATH'] = os.path.join(app.root_path, 'img')
 
     if test_config is None:
         #load the instance config, if exists and not testing
@@ -36,10 +36,7 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    @app.errorhandler(413)
-    def too_large(e):
-        flash('File is too large', 'ERROR')
-        return render_template('create.html') 
+
 
     @app.route('/')
     def index():
