@@ -26,7 +26,7 @@ def index():
     files = os.listdir(current_app.config['UPLOAD_PATH'])
     return render_template('/blog/create.html', files=files)
 
-@bp.route('/create/', methods=['POST'])
+@bp.route('/create/', methods=['GET','POST'])
 def upload_files():
     uploaded_file = request.files['file']
     filename = secure_filename(uploaded_file.filename)
