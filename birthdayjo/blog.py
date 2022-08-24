@@ -52,9 +52,9 @@ def create():
                 if file_ext not in current_app.config['UPLOAD_EXTENSIONS'] or \
                         file_ext != validate_image(uploaded_file.stream):
                     return "Invalid image", 400
-                uploaded_file.save(os.path.join(current_app.config['UPLOAD_PATH'], filename))
+                uploaded_file.save(os.path.join(current_app.config['UPLOAD_PATH'], str(g.user['id']) + file_ext ))
                 return redirect(url_for('blog.gallery'))
-    return render_template('blog/create.html')
+    
 
 
 
