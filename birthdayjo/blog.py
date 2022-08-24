@@ -27,16 +27,36 @@ def index():
     return render_template('/blog/create.html', files=files)
 
 @bp.route('/create/', methods=['GET','POST'])
-def upload_files():
-    uploaded_file = request.files['file']
-    filename = secure_filename(uploaded_file.filename)
-    if filename != '':
-        file_ext = os.path.splitext(filename)[1]
-        if file_ext not in current_app.config['UPLOAD_EXTENSIONS'] or \
-                file_ext != validate_image(uploaded_file.stream):
-            return "Invalid image", 400
-        uploaded_file.save(os.path.join(current_app.config['UPLOAD_PATH'], filename))
-    return '', 204
+@login_required
+def create():
+    if request.method == 'POST':
+        title = request.form['title']
+        body = request.form['body']
+        error = None   
+        uploaded_file = request.files['file']
+        filename = secure_filename(uploaded_file.filename)
+        if not title:
+            error = 'Title is required.'
+        if error is not None:
+            flash(error)
+        else:
+            db = get_db()
+            db.execute(
+                'INSERT INTO post (title, body, author_id)'
+                ' VALUES (?, ?, ?)',
+                (title, body, g.user['id'])
+            )
+            db.commit()
+            if filename != '':
+                file_ext = os.path.splitext(filename)[1]
+                if file_ext not in current_app.config['UPLOAD_EXTENSIONS'] or \
+                        file_ext != validate_image(uploaded_file.stream):
+                    return "Invalid image", 400
+                uploaded_file.save(os.path.join(current_app.config['UPLOAD_PATH'], filename))
+                return redirect(url_for('blog.gallery'))
+    return render_template('blog/create.html')
+
+
 
 @bp.route('/static/img/<filename>')
 def upload(filename):
@@ -51,31 +71,6 @@ def gallery():
         ' ORDER BY created DESC'
     ).fetchall()
     return render_template('blog/gallery.html', posts=posts)
-
-@bp.route('/create/', methods=('GET','POST'))
-@login_required
-def create():
-    if request.method == 'POST':
-        title = request.form['title']
-        body = request.form['body']
-        error = None
-        
-        if not title:
-            error = 'Title is required.'
-
-        if error is not None:
-            flash(error)
-        else:
-            db = get_db()
-            db.execute(
-                'INSERT INTO post (title, body, author_id)'
-                ' VALUES (?, ?, ?)',
-                (title, body, g.user['id'])
-            )
-            db.commit()
-            return redirect(url_for('blog.gallery'))
-    return render_template('blog/create.html')
-
 
 def get_post(id, check_author=True):
     post = get_db().execute(
