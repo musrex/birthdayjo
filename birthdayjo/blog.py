@@ -4,6 +4,7 @@ from werkzeug.exceptions import abort
 from werkzeug.utils import secure_filename
 from birthdayjo.auth import login_required
 from birthdayjo.db import get_db
+import uuid
 
 import os
 import imghdr
@@ -33,8 +34,8 @@ def create():
         title = request.form['title']
         body = request.form['body']
         error = None   
-        uploaded_file = request.files['file']
-        filename = secure_filename(uploaded_file.filename)
+        if os.path.exists(g.user['username']) is False:
+            os.makedirs(g.user['username'])
         if not title:
             error = 'Title is required.'
         if error is not None:
@@ -47,17 +48,17 @@ def create():
                 (title, body, g.user['id'])
             )
             db.commit()
-            if filename != '':
-                file_ext = os.path.splitext(filename)[1]
-                if file_ext not in current_app.config['UPLOAD_EXTENSIONS'] or \
-                        file_ext != validate_image(uploaded_file.stream):
-                    return "Invalid image", 400
-                uploaded_file.save(os.path.join(current_app.config['UPLOAD_PATH'], str(g.user['id']) + file_ext ))
-                return redirect(url_for('blog.gallery'))
+            for uploaded_file in request.files.getlist('file'):
+                filename = secure_filename(uploaded_file.filename)    
+                if filename != '':
+                    file_ext = os.path.splitext(filename)[1]
+                    if file_ext not in current_app.config['UPLOAD_EXTENSIONS'] or \
+                            file_ext != validate_image(uploaded_file.stream):
+                        return "Invalid image", 400
+                    filename = uuid.uuid4().hex
+                    uploaded_file.save(os.path.join(g.user['username'], filename + file_ext))
+                    return redirect(url_for('blog.gallery'))
     
-
-
-
 @bp.route('/static/img/<filename>')
 def upload(filename):
     return send_from_directory(current_app.config['UPLOAD_PATH'], filename)
