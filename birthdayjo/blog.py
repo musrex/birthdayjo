@@ -57,6 +57,7 @@ def create():
                         return "Invalid image", 400
                     filename = uuid.uuid4().hex
                     uploaded_file.save(os.path.join(g.user['username'], filename + file_ext))
+
             return redirect(url_for('blog.gallery'))
     
 @bp.route('/static/img/<filename>')
@@ -65,13 +66,14 @@ def upload(filename):
 
 @bp.route('/blog')
 def gallery():
+    images = os.listdir(g.user['username'])
     db = get_db()
     posts = db.execute(
         'SELECT p.id, title, body, created, author_id, username'
         ' FROM post p JOIN user u ON p.author_id = u.id'
         ' ORDER BY created DESC'
     ).fetchall()
-    return render_template('blog/gallery.html', posts=posts)
+    return render_template('blog/gallery.html', posts=posts, images=images)
 
 def get_post(id, check_author=True):
     post = get_db().execute(
