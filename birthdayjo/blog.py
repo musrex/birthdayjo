@@ -57,7 +57,7 @@ def create():
                         return "Invalid image", 400
                     filename = uuid.uuid4().hex
                     uploaded_file.save(os.path.join(g.user['username'], filename + file_ext))
-                    return redirect(url_for('blog.gallery'))
+            return redirect(url_for('blog.gallery'))
     
 @bp.route('/static/img/<filename>')
 def upload(filename):
