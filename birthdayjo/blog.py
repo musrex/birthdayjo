@@ -1,5 +1,7 @@
 from flask import (
     Flask, Blueprint, flash, g, redirect, render_template, request, url_for, send_from_directory, current_app)
+from flask_login import LoginManager
+from flask_login import current_user
 from werkzeug.exceptions import abort
 from werkzeug.utils import secure_filename
 from birthdayjo.auth import login_required
@@ -9,6 +11,8 @@ import uuid
 import os
 import imghdr
 bp = Blueprint('blog', __name__, url_prefix='/')
+
+
 
 def validate_image(stream):
     header = stream.read(512) # 512 bytes should be enough for a header check
@@ -24,8 +28,7 @@ def too_large(e):
 
 @bp.route('/create/')
 def index():
-    files = os.listdir(current_app.config['UPLOAD_PATH'])
-    return render_template('/blog/create.html', files=files)
+    return render_template('/blog/create.html')
 
 @bp.route('/create/', methods=['GET','POST'])
 @login_required
@@ -66,14 +69,17 @@ def upload(filename):
 
 @bp.route('/blog')
 def gallery():
-    images = os.listdir(g.user['username'])
     db = get_db()
     posts = db.execute(
         'SELECT p.id, title, body, created, author_id, username'
         ' FROM post p JOIN user u ON p.author_id = u.id'
         ' ORDER BY created DESC'
     ).fetchall()
-    return render_template('blog/gallery.html', posts=posts, images=images)
+    if os.path.exists(g.user['username']) is True:
+        images = os.listdir(g.user['username'])
+        return render_template('blog/gallery.html', posts=posts, images=images)
+    else:
+        return render_template('blog/gallery.html', posts=posts)
 
 def get_post(id, check_author=True):
     post = get_db().execute(

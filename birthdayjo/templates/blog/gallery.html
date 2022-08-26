@@ -21,9 +21,14 @@
             </header>
             <p class="body">{{ post['file_name'] }}</p>
             <p class="body">{{ post['body'] }}</p>
-            {% for image in images %}
-            <img src="{{ url_for(g.user['username'], filename='images') }}">
-            {% endfor %} 
+                
+                    {% if os.path.exists(post['username']) %}
+                        <p>Hello :)</p>
+                        {% for image in images %}
+                        <img src="{{ url_for(post['username'], filename='image') }}">
+                        {% endfor %}
+                    {% endif %}
+                
         </article>
         {% if not loop.last %} 
             <hr>
