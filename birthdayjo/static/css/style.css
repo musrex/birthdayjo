@@ -55,6 +55,10 @@ main {
     z-index: 0;
 }
 
+form {
+    width: 50em;
+}
+
 .share{
     display: flex;
     flex-direction: column;
