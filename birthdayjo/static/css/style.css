@@ -56,21 +56,12 @@ main {
 }
 
 form {
-    width: 50em;
-}
-
-.share{
     display: flex;
     flex-direction: column;
     gap: .5rem;
     text-align: center;
     align-items: center;
     margin: 1rem auto;
-}
-
-#caption{
-    width: 25rem;
-    height: 10rem;
 }
 
 input[type="file"] {
@@ -82,22 +73,12 @@ input[type="file"] {
     display: inline-block;
     padding: 6px 12px;
     cursor: pointer;
+    width: 4em;
+    margin: 1em auto;
 }
 
 .custom-upload:hover {
     background: var(--bg-secondary);
-}
-
-.button{
-    border: none;
-    padding: .5rem 1rem;
-    font-size: 1rem;
-    border-radius: 10%;
-    cursor: pointer;
-}
-
-.button:hover{
-    background: var(--text-secondary);
 }
 
 .navbar {
