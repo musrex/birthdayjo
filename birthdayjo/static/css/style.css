@@ -106,7 +106,7 @@ input[type="file"] {
     background: var(--bg-secondary);
 }
 
-body > main:nth-child(2) > form:nth-child(2) > input:nth-child(7) {
+body > main:nth-child(2) > form:nth-child(2) > input:nth-child(5), body > main:nth-child(2) > form:nth-child(2) > input:nth-child(7) {
     border: 0px solid var(--bg-secondary);
     background: linear-gradient(0deg, var(--bg-secondary) 0%, var(--bg-primary) 120%);
     border-radius: 2% / 25%;
@@ -119,7 +119,7 @@ body > main:nth-child(2) > form:nth-child(2) > input:nth-child(7) {
     font-weight: bolder;
 }
 
-body > main:nth-child(2) > form:nth-child(2) > input:nth-child(7):hover {
+body > main:nth-child(2) > form:nth-child(2) > input:nth-child(5):hover, body > main:nth-child(2) > form:nth-child(2) > input:nth-child(7):hover {
     background: var(--bg-secondary);
 }
 
