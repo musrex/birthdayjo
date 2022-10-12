@@ -55,7 +55,7 @@ main {
     z-index: 0;
 }
 
-.share{
+form {
     display: flex;
     flex-direction: column;
     gap: .5rem;
@@ -64,9 +64,26 @@ main {
     margin: 1rem auto;
 }
 
-#caption{
-    width: 25rem;
-    height: 10rem;
+#title {
+    width: 40%;
+}
+
+#title:focus {
+    box-shadow: 5px 3px var(--bg-secondary);
+    outline: none;
+}
+
+body > main:nth-child(2) > form:nth-child(2) > label:nth-child(3) {
+    width: 50%;
+}
+#body { 
+    width: 50%;
+    height: 15em;  
+}
+
+#body:focus {
+    box-shadow: 5px 3px var(--bg-secondary);
+    outline: none;
 }
 
 input[type="file"] {
@@ -74,26 +91,36 @@ input[type="file"] {
 }
 
 .custom-upload {
-    border: 1px solid #ccc;
+    background: linear-gradient(0deg, var(--bg-secondary) 0%, var(--bg-primary) 120%);
+    border-radius: 5% / 50%;
     display: inline-block;
     padding: 6px 12px;
     cursor: pointer;
+    width: 8em;
+    margin: 1em auto;
+    color: var(--text-primary);
+    font-weight: bolder;
 }
 
 .custom-upload:hover {
     background: var(--bg-secondary);
 }
 
-.button{
-    border: none;
-    padding: .5rem 1rem;
-    font-size: 1rem;
-    border-radius: 10%;
+body > main:nth-child(2) > form:nth-child(2) > input:nth-child(5), body > main:nth-child(2) > form:nth-child(2) > input:nth-child(7) {
+    border: 0px solid var(--bg-secondary);
+    background: linear-gradient(0deg, var(--bg-secondary) 0%, var(--bg-primary) 120%);
+    border-radius: 2% / 25%;
+    display: inline-block;
+    padding: 6px 12px;
     cursor: pointer;
+    width: 8em;
+    margin: 1em auto;
+    color: var(--text-primary);
+    font-weight: bolder;
 }
 
-.button:hover{
-    background: var(--text-secondary);
+body > main:nth-child(2) > form:nth-child(2) > input:nth-child(5):hover, body > main:nth-child(2) > form:nth-child(2) > input:nth-child(7):hover {
+    background: var(--bg-secondary);
 }
 
 .navbar {

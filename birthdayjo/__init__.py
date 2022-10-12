@@ -6,8 +6,14 @@ from flask_wtf import FlaskForm
 from flask_wtf.file import FileField
 from werkzeug.utils import secure_filename
 from wtforms import SubmitField
+from flask_login import LoginManager
+from flask_login import current_user
 
+login_manager = LoginManager()
 
+@login_manager.user_loader
+def load_user(user_id):
+    return user.get(user_id)
 
 class MyForm(FlaskForm):
     file = FileField('file')
@@ -21,7 +27,9 @@ def create_app(test_config=None):
         DATABASE=os.path.join(app.instance_path, 'birthdayjo.sqlite'),
     )
     app.config['UPLOAD_EXTENSIONS'] = ['.jpg', 'jpeg', '.png', '.gif']
-    app.config['UPLOAD_PATH'] = os.path.join(app.root_path, 'img')
+    app.config['UPLOAD_PATH'] = os.path.join('birthdayjo/img')
+    
+    login_manager.init_app(app)
 
     if test_config is None:
         #load the instance config, if exists and not testing
@@ -36,7 +44,9 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-
+    @app.context_processor
+    def handle_context():
+        return dict(os=os)
 
     @app.route('/')
     def index():

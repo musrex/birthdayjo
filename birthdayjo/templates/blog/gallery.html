@@ -21,6 +21,13 @@
             </header>
             <p class="body">{{ post['file_name'] }}</p>
             <p class="body">{{ post['body'] }}</p>
+                
+                        <p>Hello :)</p>
+                        {% for image in images %}
+                        <img src="{{ url_for('blog.upload', filename='363fa656ef5e4a5e8e3ed709d72a365f.png') }}">
+                        {% endfor %}
+
+                
         </article>
         {% if not loop.last %} 
             <hr>
