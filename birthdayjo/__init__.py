@@ -13,7 +13,7 @@ login_manager = LoginManager()
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.get(user_id)
+    return user.get(user_id)
 
 class MyForm(FlaskForm):
     file = FileField('file')
@@ -27,7 +27,7 @@ def create_app(test_config=None):
         DATABASE=os.path.join(app.instance_path, 'birthdayjo.sqlite'),
     )
     app.config['UPLOAD_EXTENSIONS'] = ['.jpg', 'jpeg', '.png', '.gif']
-    app.config['UPLOAD_PATH'] = os.path.join(app.root_path, 'img')
+    app.config['UPLOAD_PATH'] = os.path.join('birthdayjo/img')
     
     login_manager.init_app(app)
 

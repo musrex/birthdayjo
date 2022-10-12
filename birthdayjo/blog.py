@@ -1,3 +1,4 @@
+from tkinter import CURRENT
 from flask import (
     Flask, Blueprint, flash, g, redirect, render_template, request, url_for, send_from_directory, current_app)
 from flask_login import LoginManager
@@ -37,8 +38,8 @@ def create():
         title = request.form['title']
         body = request.form['body']
         error = None   
-        if os.path.exists(g.user['username']) is False:
-            os.makedirs(g.user['username'])
+        #if os.path.exists(g.user['username']) is False:
+            #os.makedirs(g.user['username'])
         if not title:
             error = 'Title is required.'
         if error is not None:
@@ -58,13 +59,15 @@ def create():
                     if file_ext not in current_app.config['UPLOAD_EXTENSIONS'] or \
                             file_ext != validate_image(uploaded_file.stream):
                         return "Invalid image", 400
-                    filename = uuid.uuid4().hex
-                    uploaded_file.save(os.path.join(g.user['username'], filename + file_ext))
+                    filename = uuid.uuid4().hex + file_ext
+                    uploaded_file.save(os.path.join(current_app.config['UPLOAD_PATH'], filename))
 
             return redirect(url_for('blog.gallery'))
     
-@bp.route('/static/img/<filename>')
+@bp.route('/img/<filename>')
 def upload(filename):
+    for files in request.files.getlist('files'):
+        filename = files
     return send_from_directory(current_app.config['UPLOAD_PATH'], filename)
 
 @bp.route('/blog')
@@ -75,11 +78,11 @@ def gallery():
         ' FROM post p JOIN user u ON p.author_id = u.id'
         ' ORDER BY created DESC'
     ).fetchall()
-    if os.path.exists(g.user['username']) is True:
-        images = os.listdir(g.user['username'])
-        return render_template('blog/gallery.html', posts=posts, images=images)
-    else:
-        return render_template('blog/gallery.html', posts=posts)
+    #if os.path.exists(g.user['username']) is True:
+    images = os.listdir(current_app.config['UPLOAD_PATH'])
+    return render_template('blog/gallery.html', posts=posts, images=images)
+    #else:
+        #return render_template('blog/gallery.html', posts=posts)
 
 def get_post(id, check_author=True):
     post = get_db().execute(
