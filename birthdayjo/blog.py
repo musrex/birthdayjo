@@ -1,8 +1,5 @@
-from tkinter import CURRENT
 from flask import (
     Flask, Blueprint, flash, g, redirect, render_template, request, url_for, send_from_directory, current_app)
-from flask_login import LoginManager
-from flask_login import current_user
 from werkzeug.exceptions import abort
 from werkzeug.utils import secure_filename
 from birthdayjo.auth import login_required
@@ -37,7 +34,8 @@ def create():
     if request.method == 'POST':
         title = request.form['title']
         body = request.form['body']
-        error = None   
+        error = None
+        files = str(request.files['file'])
         #if os.path.exists(g.user['username']) is False:
             #os.makedirs(g.user['username'])
         if not title:
@@ -47,9 +45,9 @@ def create():
         else:
             db = get_db()
             db.execute(
-                'INSERT INTO post (title, body, author_id)'
-                ' VALUES (?, ?, ?)',
-                (title, body, g.user['id'])
+                'INSERT INTO post (title, body, author_id, files)'
+                ' VALUES (?, ?, ?, ?)',
+                (title, body, g.user['id'], files)
             )
             db.commit()
             for uploaded_file in request.files.getlist('file'):

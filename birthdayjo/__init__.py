@@ -2,22 +2,11 @@ import os
 
 from flask import (Flask, abort, flash, redirect, render_template, request,
                    send_from_directory, url_for)
-from flask_wtf import FlaskForm
+
 from flask_wtf.file import FileField
 from werkzeug.utils import secure_filename
 from wtforms import SubmitField
-from flask_login import LoginManager
-from flask_login import current_user
 
-login_manager = LoginManager()
-
-@login_manager.user_loader
-def load_user(user_id):
-    return user.get(user_id)
-
-class MyForm(FlaskForm):
-    file = FileField('file')
-    submit = SubmitField('submit')
 
 def create_app(test_config=None):
     #create and configure app
@@ -27,9 +16,9 @@ def create_app(test_config=None):
         DATABASE=os.path.join(app.instance_path, 'birthdayjo.sqlite'),
     )
     app.config['UPLOAD_EXTENSIONS'] = ['.jpg', 'jpeg', '.png', '.gif']
-    app.config['UPLOAD_PATH'] = os.path.join('birthdayjo/img')
+    app.config['UPLOAD_PATH'] = os.path.join('birthdayjo/static/img')
     
-    login_manager.init_app(app)
+
 
     if test_config is None:
         #load the instance config, if exists and not testing
